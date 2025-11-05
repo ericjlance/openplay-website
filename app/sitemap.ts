@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { fetchExport } from '@/lib/api'
+import { fetchExport } from '@/lib/server'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = 'https://example.com'

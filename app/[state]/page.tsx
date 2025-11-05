@@ -1,4 +1,5 @@
-import { fetchExport, groupBy } from '@/lib/api'
+import { fetchExport } from '@/lib/server'
+import { groupBy } from '@/lib/utils'
 import VenueCard from '@/components/VenueCard'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import MapView from '@/components/MapView'

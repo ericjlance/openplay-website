@@ -1,6 +1,6 @@
 'use client'
 import { Venue } from '@/lib/types'
-import { fmtTime } from '@/lib/api'
+import { fmtTime } from '@/lib/utils'
 
 export default function VenueCard({ v, href }:{ v: Venue, href?: string }){
   const content = (

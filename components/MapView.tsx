@@ -2,15 +2,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Loader } from '@googlemaps/js-api-loader'
 import type { Venue } from '@/lib/types'
-import { daysOrder, fmtTime, minutesSinceMidnight, haversineMiles } from '@/lib/api'
+import { daysOrder, fmtTime, minutesSinceMidnight, haversineMiles } from '@/lib/utils'
 import VenueCard from './VenueCard'
 
 type Props = {
   venues: Venue[]
   initialCenter?: { lat: number, lng: number }
 }
-
-const dayLong = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
 
 export default function MapView({ venues, initialCenter }: Props){
   const mapRef = useRef<HTMLDivElement>(null)
@@ -25,8 +23,8 @@ export default function MapView({ venues, initialCenter }: Props){
 
   // Load Google Maps
   useEffect(() => {
-    const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || process.env.GOOGLE_MAPS_API_KEY
-    const loader = new Loader({ apiKey: key as string, version: 'weekly' })
+    const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string
+    const loader = new Loader({ apiKey: key, version: 'weekly' })
     loader.load().then(() => {
       if (!mapRef.current) return
       const m = new google.maps.Map(mapRef.current, {
@@ -86,9 +84,6 @@ export default function MapView({ venues, initialCenter }: Props){
   // Render markers
   useEffect(() => {
     if (!map) return
-    // Clear old markers by re-creating map? Instead keep a list
-    // simple approach: attach to map and rely on gc when re-rendering by setting map to null first is complex
-    // we'll recreate markers each time and store them on map via a symbol key
     const anyMap = map as any
     if (anyMap.__markers) {
       anyMap.__markers.forEach((m: google.maps.Marker) => m.setMap(null))

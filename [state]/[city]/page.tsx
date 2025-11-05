@@ -1,4 +1,4 @@
-import { fetchExport } from '@/lib/api'
+import { fetchExport } from '@/lib/server'
 import VenueCard from '@/components/VenueCard'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import MapView from '@/components/MapView'

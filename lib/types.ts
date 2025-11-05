@@ -23,4 +23,3 @@ export type Venue = {
   photos?: string[]
   source?: string
 }
-export type ExportResponse = Venue[] | { venues: Venue[], export_generated_at?: string }

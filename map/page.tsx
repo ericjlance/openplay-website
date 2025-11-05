@@ -1,4 +1,4 @@
-import { fetchExport } from '@/lib/api'
+import { fetchExport } from '@/lib/server'
 import MapView from '@/components/MapView'
 
 export const revalidate = 300

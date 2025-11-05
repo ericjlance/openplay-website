@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
-import { fetchExport, fmtTime } from '@/lib/api'
+import { fetchExport } from '@/lib/server'
+import { fmtTime } from '@/lib/utils'
 import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const revalidate = 300
@@ -114,7 +115,7 @@ export default async function VenuePage({ params }: Props){
 }
 
 function normalizeDay(d?: string){
-  const map: Record<string,string> = { Sun:'Sunday', Mon:'Monday', Tue:'Tuesday', Wed:'Wednesday', Thu:'Thursday', Fri:'Friday', Sat:'Saturday' }
+  const map: Record<string,string> = { Sun:'Sunday', Mon:'Monday', Tue:'Tuesday', Wed:'Thursday', Thu:'Thursday', Fri:'Friday', Sat:'Saturday' }
   const k = (d||'').slice(0,3)
   return map[k] || 'Monday'
 }
