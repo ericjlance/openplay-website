@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { fetchExport } from '@/lib/api'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = 'https://example.com'
+  const base = 'https://openplay-website.vercel.app/'
   const items: MetadataRoute.Sitemap = [
     { url: base, changeFrequency: 'hourly', priority: 1 },
     { url: `${base}/map`, changeFrequency: 'hourly', priority: 0.9 }
