@@ -15,9 +15,9 @@ export default function MapView({ venues, initialCenter }: Props){
   const [map, setMap] = useState<google.maps.Map | null>(null)
   const [userPos, setUserPos] = useState<{lat:number,lng:number} | null>(null)
   const [radius, setRadius] = useState<number>(25)
-  const [day, setDay] = useState<string>('') // '', 'Mon', etc.
-  const [start, setStart] = useState<string>('') // '09:00'
-  const [end, setEnd] = useState<string>('')   // '12:00'
+  const [day, setDay] = useState<string>('')
+  const [start, setStart] = useState<string>('')
+  const [end, setEnd] = useState<string>('')
   const [indoor, setIndoor] = useState(false)
   const [outdoor, setOutdoor] = useState(false)
 
@@ -28,7 +28,7 @@ export default function MapView({ venues, initialCenter }: Props){
     loader.load().then(() => {
       if (!mapRef.current) return
       const m = new google.maps.Map(mapRef.current, {
-        center: initialCenter || { lat: 39.8283, lng: -98.5795 }, // continental US
+        center: initialCenter || { lat: 39.8283, lng: -98.5795 },
         zoom: initialCenter ? 9 : 4,
         mapTypeControl: false,
         streetViewControl: false
@@ -53,30 +53,29 @@ export default function MapView({ venues, initialCenter }: Props){
 
   const filtered = useMemo(() => {
     let list = venues.filter(v => v.lat && v.lng) as Venue[]
+
     if (indoor) list = list.filter(v => v.indoor)
     if (outdoor) list = list.filter(v => v.outdoor)
 
-    // time window filter
     if (day || start || end){
       const dIdx = day ? daysOrder.indexOf(day) : -1
       const sMin = minutesSinceMidnight(start) ?? -1
       const eMin = minutesSinceMidnight(end) ?? 24*60+1
+
       list = list.filter(v => {
         const ops = v.open_play || []
         return ops.some(op => {
-          const opDayIdx = daysOrder.indexOf((op.day||'').slice(0,3))
+          const opDayIdx = daysOrder.indexOf((op.day || '').slice(0,3))
           if (dIdx >= 0 && opDayIdx !== dIdx) return false
           const opS = minutesSinceMidnight(op.start) ?? -1
           const opE = minutesSinceMidnight(op.end) ?? 24*60+1
-          // overlap test
           return (opS <= eMin) && (opE >= sMin)
         })
       })
     }
 
-    // near me
     if (userPos){
-      list = list.filter(v => haversineMiles(userPos, {lat: v.lat as number, lng: v.lng as number}) <= radius)
+      list = list.filter(v => haversineMiles(userPos, { lat: v.lat as number, lng: v.lng as number }) <= radius)
     }
     return list
   }, [venues, indoor, outdoor, day, start, end, userPos, radius])
@@ -112,7 +111,9 @@ export default function MapView({ venues, initialCenter }: Props){
         }}>Center Near Me</button>
 
         <label>Radius (mi)
-          <input type="number" min={1} max={200} value={radius} onChange={e=>setRadius(parseInt(e.target.value||'0')||25)} style={{width:80, marginLeft:6}}/>
+          <input type="number" min={1} max={200} value={radius}
+                 onChange={e=>setRadius(parseInt(e.target.value||'0')||25)}
+                 style={{width:80, marginLeft:6}}/>
         </label>
 
         <label>Day
@@ -141,7 +142,11 @@ export default function MapView({ venues, initialCenter }: Props){
         </div>
         <div className="card-grid" style={{marginTop:12}}>
           {filtered.slice(0,30).map(v => (
-            <VenueCard key={v.slug} v={v} href={`/${(v.state||'').toLowerCase()}/${encodeURIComponent(String(v.city||'').toLowerCase())}/${v.slug}`} />
+            <VenueCard
+              key={v.slug}
+              v={v}
+              href={`/${(v.state||'').toLowerCase()}/${encodeURIComponent(String(v.city||'').toLowerCase())}/${v.slug}`}
+            />
           ))}
         </div>
       </div>
@@ -150,7 +155,10 @@ export default function MapView({ venues, initialCenter }: Props){
 }
 
 function markerHtml(v: Venue){
-  const firstTwo = (v.open_play||[]).slice(0,2).map(op => `${op.day} ${fmtTime(op.start)}${op.end?`–${fmtTime(op.end)}`:''}`).join('<br/>')
+  const firstTwo = (v.open_play||[])
+    .slice(0,2)
+    .map(op => `${op.day} ${fmtTime(op.start)}${op.end?`–${fmtTime(op.end)}`:''}`)
+    .join('<br/>')
   const url = `/${(v.state||'').toLowerCase()}/${encodeURIComponent(String(v.city||'').toLowerCase())}/${v.slug}`
   return `<div style="font-family:system-ui,Segoe UI,Arial">
     <div style="font-weight:600">${v.name}</div>
