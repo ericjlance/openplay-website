@@ -1,4 +1,10 @@
-export type OpenPlay = { day?: string; start?: string; end?: string; notes?: string };
+// lib/types.ts
+export type OpenPlay = {
+  day?: string;
+  start?: string;
+  end?: string;
+  notes?: string;
+};
 
 export type Venue = {
   slug: string;
@@ -25,6 +31,7 @@ export type Venue = {
   source?: string;
 };
 
+// ✅ This is the missing export
 export type ExportResponse =
   | Venue[]
   | {
