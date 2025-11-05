@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { fetchExport } from '@/lib/server'
 import { fmtTime } from '@/lib/utils'
-import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const revalidate = 300
 
@@ -24,7 +23,6 @@ export default async function VenuePage({ params }: Props){
   if (!v) {
     return (
       <main className="container" style={{padding:'24px 0'}}>
-        <Breadcrumbs parts={[{label:'Home', href:'/'}, {label: state, href:`/${params.state}`}, {label: city, href:`/${params.state}/${params.city}`}, {label:'Not found'}]} />
         <h1>Venue not found</h1>
         <p className="muted">This venue may have been removed or renamed.</p>
       </main>
@@ -71,8 +69,6 @@ export default async function VenuePage({ params }: Props){
       </header>
 
       <main className="container" style={{padding:'16px 0'}}>
-        <Breadcrumbs parts={[{label:'Home', href:'/'}, {label: state, href:`/${params.state}`}, {label: city, href:`/${params.state}/${params.city}`}, {label:v.name}]} />
-
         <div style={{marginTop:12}} className="muted">{v.address}</div>
         <div className="tag-row">
           {v.indoor && <span className="tag">Indoor</span>}
@@ -95,13 +91,6 @@ export default async function VenuePage({ params }: Props){
           ) : <div className="sub">No schedule on file.</div>}
         </section>
 
-        <section className="small muted" style={{marginTop:12,display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
-          {v.phone && <div><div>Phone</div><a href={`tel:${v.phone}`}>{v.phone}</a></div>}
-          {v.website && <div><div>Website</div><a href={v.website} target="_blank" rel="noreferrer">{v.website}</a></div>}
-          {v.cost && <div><div>Cost</div><div>{v.cost}</div></div>}
-          {v.last_verified_at && <div><div>Last verified</div><div>{new Date(v.last_verified_at).toLocaleString()}</div></div>}
-        </section>
-
         {(v.photos||[]).length>0 && (
           <section style={{marginTop:12, display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
             {v.photos!.slice(0,4).map((p, i)=>(<img key={i} src={p} alt="Venue" style={{width:'100%',height:140,objectFit:'cover',borderRadius:10,border:'1px solid var(--border)'}}/>))}
@@ -115,7 +104,7 @@ export default async function VenuePage({ params }: Props){
 }
 
 function normalizeDay(d?: string){
-  const map: Record<string,string> = { Sun:'Sunday', Mon:'Monday', Tue:'Tuesday', Wed:'Thursday', Thu:'Thursday', Fri:'Friday', Sat:'Saturday' }
+  const map: Record<string,string> = { Sun:'Sunday', Mon:'Monday', Tue:'Tuesday', Wed:'Wednesday', Thu:'Thursday', Fri:'Friday', Sat:'Saturday' }
   const k = (d||'').slice(0,3)
   return map[k] || 'Monday'
 }
@@ -123,5 +112,6 @@ function normalizeDay(d?: string){
 function dayIndex(d?: string){
   const order = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
   const k = (d||'').slice(0,3)
-  return Math.max(0, order.indexOf(k))
+  const idx = order.indexOf(k)
+  return idx === -1 ? 7 : idx
 }

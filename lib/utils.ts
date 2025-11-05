@@ -1,5 +1,3 @@
-import type { Venue } from './types'
-
 export const daysOrder = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
 
 export function slugify(s: string){
@@ -43,15 +41,5 @@ export function haversineMiles(a:{lat:number,lng:number}, b:{lat:number,lng:numb
   const dLng = toRad(b.lng-a.lng)
   const lat1 = toRad(a.lat), lat2 = toRad(b.lat)
   const h = Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLng/2)**2
-  return 2*R*Math.asin(minMax(Math.sqrt(h),0,1))
-}
-function minMax(v:number,min:number,max:number){ return Math.max(min, Math.min(max, v)) }
-
-export function groupBy<T extends Record<string, any>>(arr: T[], key: keyof T){
-  return arr.reduce((acc: Record<string, T[]>, item) => {
-    const k = (item[key] ?? '') as string
-    if (!acc[k]) acc[k] = []
-    acc[k].push(item)
-    return acc
-  }, {})
+  return 2*R*Math.asin(Math.min(1,Math.sqrt(h)))
 }

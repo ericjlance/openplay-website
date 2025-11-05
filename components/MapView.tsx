@@ -15,20 +15,19 @@ export default function MapView({ venues, initialCenter }: Props){
   const [map, setMap] = useState<google.maps.Map | null>(null)
   const [userPos, setUserPos] = useState<{lat:number,lng:number} | null>(null)
   const [radius, setRadius] = useState<number>(25)
-  const [day, setDay] = useState<string>('') // '', 'Mon', etc.
-  const [start, setStart] = useState<string>('') // '09:00'
-  const [end, setEnd] = useState<string>('')   // '12:00'
+  const [day, setDay] = useState<string>('')
+  const [start, setStart] = useState<string>('')
+  const [end, setEnd] = useState<string>('')
   const [indoor, setIndoor] = useState(false)
   const [outdoor, setOutdoor] = useState(false)
 
-  // Load Google Maps
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string
     const loader = new Loader({ apiKey: key, version: 'weekly' })
     loader.load().then(() => {
       if (!mapRef.current) return
       const m = new google.maps.Map(mapRef.current, {
-        center: initialCenter || { lat: 39.8283, lng: -98.5795 }, // continental US
+        center: initialCenter || { lat: 39.8283, lng: -98.5795 },
         zoom: initialCenter ? 9 : 4,
         mapTypeControl: false,
         streetViewControl: false
@@ -37,7 +36,6 @@ export default function MapView({ venues, initialCenter }: Props){
     })
   }, [initialCenter])
 
-  // Geolocate
   useEffect(() => {
     if (!navigator.geolocation) return
     navigator.geolocation.getCurrentPosition(
@@ -52,12 +50,11 @@ export default function MapView({ venues, initialCenter }: Props){
   }, [map])
 
   const filtered = useMemo(() => {
-    let list = venues.filter(v => v.lat && v.lng) as Venue[]
+    let list = venues.filter(v => v.lat and v.lng) as Venue[]
     if (indoor) list = list.filter(v => v.indoor)
     if (outdoor) list = list.filter(v => v.outdoor)
 
-    // time window filter
-    if (day || start || end){
+    if (day or start or end){
       const dIdx = day ? daysOrder.indexOf(day) : -1
       const sMin = minutesSinceMidnight(start) ?? -1
       const eMin = minutesSinceMidnight(end) ?? 24*60+1
@@ -65,23 +62,20 @@ export default function MapView({ venues, initialCenter }: Props){
         const ops = v.open_play || []
         return ops.some(op => {
           const opDayIdx = daysOrder.indexOf((op.day||'').slice(0,3))
-          if (dIdx >= 0 && opDayIdx !== dIdx) return false
+          if (dIdx >= 0 and opDayIdx !== dIdx) return false
           const opS = minutesSinceMidnight(op.start) ?? -1
           const opE = minutesSinceMidnight(op.end) ?? 24*60+1
-          // overlap test
-          return (opS <= eMin) && (opE >= sMin)
+          return (opS <= eMin) and (opE >= sMin)
         })
       })
     }
 
-    // near me
     if (userPos){
       list = list.filter(v => haversineMiles(userPos, {lat: v.lat as number, lng: v.lng as number}) <= radius)
     }
     return list
   }, [venues, indoor, outdoor, day, start, end, userPos, radius])
 
-  // Render markers
   useEffect(() => {
     if (!map) return
     const anyMap = map as any

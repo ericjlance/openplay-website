@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { SITE_CONFIG } from '@/lib/config'
 
 export const metadata: Metadata = {
-  title: 'OpenPlay Pickleball Directory',
-  description: 'Find open play / drop-in pickleball near you.',
-  metadataBase: new URL('https://example.com')
+  title: SITE_CONFIG.title,
+  description: SITE_CONFIG.description,
+  metadataBase: new URL(SITE_CONFIG.siteUrl)
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

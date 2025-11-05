@@ -1,26 +1,17 @@
 import 'server-only'
-import { Venue } from './types'
-import { slugify } from './utils'
-
-const envUrl = process.env.EXPORT_URL
-const fallback = process.env.FALLBACK_EXPORT_URL || 'https://openplay.replit.app/api/export'
-
-function heal(url?: string | null){
-  if (!url) return fallback
-  return url.replace('openplauy', 'openplay')
-}
-
-export type ExportResponse = Venue[] | { venues: Venue[], export_generated_at?: string }
+import { SITE_CONFIG } from '@/lib/config'
+import { slugify } from '@/lib/utils'
+import type { Venue, ExportResponse } from '@/lib/types'
 
 export async function fetchExport(): Promise<{ venues: Venue[], export_generated_at?: string }> {
-  const url = heal(envUrl) || fallback
+  const url = SITE_CONFIG.exportUrl
   const res = await fetch(url, { next: { revalidate: 300 }, headers: { 'Accept': 'application/json' } })
   if (!res.ok) throw new Error(`Export fetch failed: ${res.status}`)
   const data: ExportResponse = await res.json()
-  const venues = Array.isArray(data) ? data : (data.venues || [])
-  const export_generated_at = Array.isArray(data) ? undefined : data.export_generated_at
+  const arr = Array.isArray(data) ? data : (data.venues || [])
+  const stamp = Array.isArray(data) ? undefined : data.export_generated_at
 
-  const normalized: Venue[] = venues.map((v: any) => ({
+  const venues: Venue[] = arr.map((v: any) => ({
     slug: v.slug || slugify(v.name || ''),
     name: v.name || 'Unknown Venue',
     address: v.address || '',
@@ -38,12 +29,12 @@ export async function fetchExport(): Promise<{ venues: Venue[], export_generated
     open_play: Array.isArray(v.open_play) ? v.open_play : [],
     rating: v.rating ?? null,
     reviews_ct: v.reviews_ct ?? v.review_count ?? null,
-    last_verified_at: v.last_verified_at || v.updated_at || export_generated_at || null,
+    last_verified_at: v.last_verified_at || v.updated_at || stamp || null,
     stale: !!v.stale,
     confidence: typeof v.confidence === 'number' ? v.confidence : null,
     photos: v.photos || [],
     source: v.source || ''
   }))
 
-  return { venues: normalized, export_generated_at }
+  return { venues, export_generated_at: stamp }
 }

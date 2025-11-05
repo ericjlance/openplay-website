@@ -10,7 +10,7 @@ export default function VenueCard({ v, href }:{ v: Venue, href?: string }){
       <div className="tag-row">
         {v.indoor && <span className="tag">Indoor</span>}
         {v.outdoor && <span className="tag">Outdoor</span>}
-        {v.stale && <span className="tag">Stale</span>}
+        {v.stale && <span className="tag">Check schedule</span>}
       </div>
       <div className="schedule">
         {(v.open_play && v.open_play.length>0) ? (

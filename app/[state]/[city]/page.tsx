@@ -1,6 +1,5 @@
 import { fetchExport } from '@/lib/server'
 import VenueCard from '@/components/VenueCard'
-import Breadcrumbs from '@/components/Breadcrumbs'
 import MapView from '@/components/MapView'
 
 export const revalidate = 300
@@ -10,7 +9,6 @@ export default async function CityPage({ params }:{ params: { state: string, cit
   const city = decodeURIComponent(params.city).replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
   const { venues } = await fetchExport()
   const list = venues.filter(v => v.state?.toUpperCase() === state && (v.city||'').toLowerCase() === city.toLowerCase())
-
   const center = list.length ? { lat: list[0].lat || 39.74, lng: list[0].lng || -104.99 } : undefined
 
   return (
@@ -22,9 +20,7 @@ export default async function CityPage({ params }:{ params: { state: string, cit
       </header>
 
       <main className="container" style={{padding:'12px 0'}}>
-        <Breadcrumbs parts={[{label:'Home', href:'/'}, {label: state, href:`/${params.state}`}, {label: city}]} />
         <MapView venues={list} initialCenter={center as any} />
-
         <section className="main" style={{gridTemplateColumns:'1fr'}}>
           <div className="card-grid">
             {list.map(v => (
