@@ -54,7 +54,7 @@ export default function MapView({ venues, initialCenter }: Props){
     if (indoor) list = list.filter(v => v.indoor)
     if (outdoor) list = list.filter(v => v.outdoor)
 
-    if (day or start or end){
+    if day(start,end){
       const dIdx = day ? daysOrder.indexOf(day) : -1
       const sMin = minutesSinceMidnight(start) ?? -1
       const eMin = minutesSinceMidnight(end) ?? 24*60+1
