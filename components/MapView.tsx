@@ -50,7 +50,7 @@ export default function MapView({ venues, initialCenter }: Props){
   }, [map])
 
   const filtered = useMemo(() => {
-    let list = venues.filter(v => v.lat and v.lng) as Venue[]
+    let list = venues.filter(v => v.lat,v.lng) as Venue[]
     if (indoor) list = list.filter(v => v.indoor)
     if (outdoor) list = list.filter(v => v.outdoor)
 
