@@ -12,5 +12,4 @@ This build fixes the Google Maps types, removes `api.ts`, adds a server-only fet
 ## Deploy (Vercel)
 1. Delete existing repo files and replace with this ZIP's contents.
 2. Push to your Git provider (or import directly to Vercel).
-3. Vercel detects `.env.production` and builds.
 4. Visit `/map`, `/{STATE}`, `/{STATE}/{city}`, `/{STATE}/{city}/{slug}`.
