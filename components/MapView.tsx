@@ -50,7 +50,7 @@ export default function MapView({ venues, initialCenter }: Props){
   }, [map])
 
   const filtered = useMemo(() => {
-    let list = venues.filter(v => v.lat,v.lng) as Venue[]
+  let list = venues.filter(v => v.lat && v.lng) as Venue[]
     if (indoor) list = list.filter(v => v.indoor)
     if (outdoor) list = list.filter(v => v.outdoor)
 
@@ -62,7 +62,7 @@ export default function MapView({ venues, initialCenter }: Props){
         const ops = v.open_play || []
         return ops.some(op => {
           const opDayIdx = daysOrder.indexOf((op.day||'').slice(0,3))
-          if (dIdx >= 0 and opDayIdx !== dIdx) return false
+          if (dIdx >= 0 && opDayIdx !== dIdx) return false
           const opS = minutesSinceMidnight(op.start) ?? -1
           const opE = minutesSinceMidnight(op.end) ?? 24*60+1
           return (opS <= eMin) and (opE >= sMin)
