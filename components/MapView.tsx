@@ -65,7 +65,7 @@ export default function MapView({ venues, initialCenter }: Props){
           if (dIdx >= 0 && opDayIdx !== dIdx) return false
           const opS = minutesSinceMidnight(op.start) ?? -1
           const opE = minutesSinceMidnight(op.end) ?? 24*60+1
-          return (opS <= eMin) and (opE >= sMin)
+          return (opS <= eMin) && (opE >= sMin)
         })
       })
     }
