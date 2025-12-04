@@ -4,7 +4,7 @@ export const revalidate = 300
 
 export default async function Page(){
   const { venues } = await fetchExport()
-  const states = Array.from(new Set(venues.map(v=>v.state).filter(Boolean))).sort()
+  const states = (Array.from(new Set(venues.map(v=>v.state).filter(Boolean))) as string[]).sort()
 
   return (
     <div>
