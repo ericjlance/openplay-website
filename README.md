@@ -8,7 +8,7 @@ This build fixes the Google Maps types, removes `api.ts`, adds a server-only fet
 - ✅ `components/MapView.tsx` corrected
 - ✅ `.env.production` included with your values
 - ✅ No `api.ts`, no server-only imports in client code
-
+ 
 ## Deploy (Vercel)
 1. Delete existing repo files and replace with this ZIP's contents.
 2. Push to your Git provider (or import directly to Vercel).
